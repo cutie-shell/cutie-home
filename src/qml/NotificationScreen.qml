@@ -86,7 +86,7 @@ Item {
 
                 onReleased: {
                     if (parent.x < - parent.width / 2 || parent.x > parent.width / 2) {
-                        notifications.remove(index)
+                        notifications.dismissNotification(model.id);
                     }
                     parent.x = 0
                 }
@@ -94,7 +94,7 @@ Item {
 
             Text {
                 id: titleText
-                text: title
+                text: model.summary
                 anchors.left: parent.left
                 anchors.leftMargin: 25
                 anchors.right: parent.right
@@ -113,7 +113,7 @@ Item {
 
             Text {
                 id: bodyText
-                text: body
+                text: model.body
                 anchors.left: parent.left
                 anchors.leftMargin: 25
                 anchors.right: parent.right

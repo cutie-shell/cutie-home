@@ -48,6 +48,8 @@ int main(int argc, char *argv[])
 		"/org/freedesktop/Notifications", notifications);
 	QDBusConnection::sessionBus().registerService(
 		"org.freedesktop.Notifications");
+	view.engine()->rootContext()->setContextProperty("notifications",
+							 notifications);
 
 	return app.exec();
 }

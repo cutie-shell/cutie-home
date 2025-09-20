@@ -32,18 +32,12 @@ Item {
             NumberAnimation { target: notificationScreen; properties: "opacity"; duration: 300; easing.type: Easing.InOutQuad; }
             NumberAnimation { target: appSwitcher; properties: "opacity"; duration: 300; easing.type: Easing.InOutQuad; }
         }
-
     ]
-
-    function addNotification(title, body, id) {
-        notifications.append({title: title, body: body, id: id});
-        CutieFeedback.trigger(Application.name, "message-new-instant", {}, -1);
-    }
-
-    function delNotification(id) {
-        for (let c_i = 0; c_i < notifications.count; c_i++){
-            if (notifications.get(c_i).id === id)
-                notifications.remove(c_i);
+    
+    Connections {
+        target: notifications
+        function onNotificationAdded(id, summary, body) {
+            CutieFeedback.trigger(Application.name, "message-new-instant", {}, -1);
         }
     }
     
@@ -76,6 +70,4 @@ Item {
     AppSwitcher { id: appSwitcher }
     NotificationScreen { id: notificationScreen }
     ScreenSwipe { id: screenSwipe }
-
-    ListModel { id: notifications }
 }

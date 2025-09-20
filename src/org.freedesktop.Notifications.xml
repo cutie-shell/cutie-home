@@ -26,5 +26,17 @@
       <arg name="timeout" type="i" direction="in"/>
       <arg name="return_id" type="u" direction="out"/>
     </method>
+    <signal name="NotificationClosed">
+      <arg name="id" type="u"/>
+      <arg name="reason" type="u"/>
+    </signal>
+    <signal name="ActionInvoked">
+      <arg name="id" type="u"/>
+      <arg name="action" type="s"/>
+    </signal>
+    <signal name="ActivationToken">
+      <arg name="id" type="u"/>
+      <arg name="token" type="s"/>
+    </signal>
   </interface>
 </node>
