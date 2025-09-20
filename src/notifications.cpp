@@ -13,6 +13,7 @@ QStringList Notifications::GetCapabilities()
 	QStringList caps = QStringList();
 	caps.append("body");
 	caps.append("persistence");
+	caps.append("sound");
 	return caps;
 }
 
@@ -33,8 +34,11 @@ uint Notifications::Notify(QString app_name, uint replaces_id, QString app_icon,
 				};
 				QModelIndex index = createIndex(i, 0);
 				emit dataChanged(index, index);
+
+				QVariantMap feedbackHints =
+					convertToFeedbackHints(hints);
 				emit notificationAdded(notificationId, summary,
-						       body);
+						       body, feedbackHints);
 				return notificationId;
 			}
 		}
@@ -47,7 +51,8 @@ uint Notifications::Notify(QString app_name, uint replaces_id, QString app_icon,
 				 body, actions, hints, expire_timeout });
 	endInsertRows();
 
-	emit notificationAdded(notificationId, summary, body);
+	QVariantMap feedbackHints = convertToFeedbackHints(hints);
+	emit notificationAdded(notificationId, summary, body, feedbackHints);
 
 	return notificationId;
 }
@@ -134,4 +139,27 @@ QHash<int, QByteArray> Notifications::roleNames() const
 	roles[HintsRole] = "hints";
 	roles[ExpireTimeoutRole] = "expireTimeout";
 	return roles;
+}
+
+QVariantMap
+Notifications::convertToFeedbackHints(const QVariantMap &notificationHints)
+{
+	QVariantMap feedbackHints;
+
+	// Handle suppress-sound by marking it for QML to check
+	if (notificationHints.value("suppress-sound", false).toBool()) {
+		feedbackHints["suppress-sound"] = true;
+		return feedbackHints;
+	}
+
+	// Map sound-file hint directly (both systems use the same name)
+	if (notificationHints.contains("sound-file")) {
+		QString soundFile =
+			notificationHints.value("sound-file").toString();
+		if (!soundFile.isEmpty()) {
+			feedbackHints["sound-file"] = soundFile;
+		}
+	}
+
+	return feedbackHints;
 }

@@ -36,8 +36,13 @@ Item {
     
     Connections {
         target: notifications
-        function onNotificationAdded(id, summary, body) {
-            CutieFeedback.trigger(Application.name, "message-new-instant", {}, -1);
+        function onNotificationAdded(id, summary, body, feedbackHints) {
+            // Check if sound should be suppressed
+            if (feedbackHints["suppress-sound"] === true) {
+                return; // Don't trigger any feedback
+            }
+            
+            CutieFeedback.trigger(Application.name, "message-new-instant", feedbackHints, -1);
         }
     }
     

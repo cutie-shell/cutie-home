@@ -54,7 +54,8 @@ class Notifications : public QAbstractListModel {
 	void ActionInvoked(uint id, QString action);
 	void ActivationToken(uint id, QString token);
 
-	void notificationAdded(uint id, QString summary, QString body);
+	void notificationAdded(uint id, QString summary, QString body,
+			       QVariantMap feedbackHints);
 
     public slots:
 	QStringList GetCapabilities();
@@ -68,6 +69,9 @@ class Notifications : public QAbstractListModel {
     private:
 	int currentId = 0;
 	QList<NotificationData> m_notifications;
+
+	QVariantMap
+	convertToFeedbackHints(const QVariantMap &notificationHints);
 };
 
 #endif // NOTIFICATIONS_H
